@@ -6,7 +6,7 @@ date: 2020-05-25
 # What are R Jam Sessions?
 R Jam Sessions are 60-90 minutes blocks to do all things R and Data Science. Meant to be a safe environment, this space and their participants don't judge other people's code and approach to results, build tools together, and support each other e-learning by fostering a kind, inclusive, and motivaitonal attitude.
 
-Hopefully this repo will keep growing as I (recently turned wet-lab neurobiologist) keep learning R and Data Science to pump my ressearch projects.
+Hopefully this repo will keep growing as I (a recently turned wet-lab neurobiologist) keep learning R and Data Science to pump my ressearch projects.
 
 Date | R Jam Topic | Relevant Links
 ---| ---| ---|
