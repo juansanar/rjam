@@ -130,6 +130,7 @@ Great! We have created `PANX1_NP` with *PANX1* transcript levels in neural plate
 Let's use some of the some of the characters to our advantage and create prenatal (pcw) and postnatal (mos, yrs) dataframes.
 
 ```{r PANX1_prenatal, messages = FALSE}
+# Prenatal
 PANX1_NP_pre <- PANX1_NP %>% 
   filter(str_detect(donor_age, "pcw"))
 
@@ -137,9 +138,58 @@ PANX1_NP_pre <- PANX1_NP_pre %>%
   mutate(donor_age = 
            as.numeric(gsub(" pcw", "", PANX1_NP_pre$donor_age))) %>%
   arrange(donor_age)
+
+# Postnatal
+PANX1_NP_post_mos <- PANX1_NP %>% 
+  filter(str_detect(donor_age, "mos"))
+
+PANX1_NP_post_yrs <- PANX1_NP %>% 
+  filter(str_detect(donor_age, "yrs"))
+
+# Convert months to years
+PANX1_NP_post_mos <- PANX1_NP_post_mos %>% 
+  mutate(donor_age = 
+           (as.numeric(gsub(" mos", "", PANX1_NP_post_mos$donor_age)))/12) %>%
+  arrange(donor_age)
+
+# Remove yrs
+PANX1_NP_post_yrs <- PANX1_NP_post_yrs %>% 
+  mutate(donor_age = 
+           (as.numeric(gsub(" yrs", "", PANX1_NP_post_yrs$donor_age)))) %>%
+  arrange(donor_age)
+
+PANX1_NP_post <- rbind(PANX1_NP_post_mos, PANX1_NP_post_yrs)
 ```
 
+### Plotting time {.tabset}
+
 We got in our hands now a nice "plottable" data frame. So, let's plot!
+
+#### *PANX1* prenatal
+
 ```{r PANX1_NP_pre_plot, message=FALSE, warning=FALSE}
-PANX1_NP_pre %>% ggplot(aes(donor_age, PANX1_log2_RPKM)) + geom_point() + geom_smooth(fill = "blue", alpha = 0.2) + scale_x_continuous("Postconception weeks (pcw)", limits = c(7,38), breaks = seq(from = 8, to = 38, by = 2)) + ylab("mRNA (log2 RPKM)") + ggtitle("Panx1") + theme(plot.title = element_text(hjust = 0.5)) + ylim(0,6.5) + theme_bw()
+PANX1_NP_pre %>% 
+  ggplot(aes(donor_age, PANX1_log2_RPKM)) + 
+  geom_point() + 
+  geom_smooth(fill = "blue", alpha = 0.2) + scale_x_continuous("Postconception weeks (pcw)", 
+                  limits = c(7,38), 
+                  breaks = seq(from = 8, to = 38, by = 2)) + 
+  ylab("mRNA (log2 RPKM)") + 
+  ggtitle("PANX1") + 
+  theme(plot.title = element_text(hjust = 0.5, 
+                                  face = "bold.italic")) + 
+  ylim(0,6.5)
+```
+
+#### *PANX1* postnatal
+```{r PANX1_NP_post_plot, message=FALSE, warning=FALSE}
+PANX1_NP_post %>% 
+  ggplot(aes(donor_age, PANX1_log2_RPKM)) + 
+  geom_point() + 
+  geom_smooth(fill = "blue", alpha = 0.2) + 
+  scale_x_continuous("Age (years)", limits = c(0,40), breaks = seq(from = 0, to = 40, by = 4)) + 
+  ylab("mRNA (log2 RPKM)") + 
+  ggtitle("PANX1") + 
+  theme(plot.title = element_text(hjust = 0.5, face = "bold.italic")) + 
+  ylim(0,6.5)
 ```
