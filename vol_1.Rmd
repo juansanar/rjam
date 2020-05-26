@@ -1,9 +1,14 @@
 ---
 title: "R Jam Sessions Vol. 1"
 author: "Juan C. Sanchez-Arias"
-date: "25/05/2020"
-output: html_document
-
+date: "26/05/2020"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: haddock
+  
 knit: (function(input_file, encoding) {
   out_dir <- 'docs';
   rmarkdown::render(input_file,
@@ -15,7 +20,9 @@ knit: (function(input_file, encoding) {
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## What is this? A website? A report? RStudio?
+## What is this? A website? A report? RStudio? {.tabset}
+
+### R Markdown 
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
@@ -28,7 +35,7 @@ This an example: You can embed an R code chunk like this:
 summary(cars)
 ```
 
-## Including Plots
+### Including Plots
 
 You can also embed plots, for example:
 
@@ -36,4 +43,8 @@ You can also embed plots, for example:
 plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+In the example above, the `echo = FALSE` parameter was added to the ` ```{r}``` ` code chunk to prevent printing of the R code that generated the plot.
+
+
+
+
