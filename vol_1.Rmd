@@ -27,7 +27,8 @@ knitr::opts_chunk$set(echo = TRUE)
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 When we **Knit** an R Markdown (.rmd) it will generate a document that includes both content as well as the output of any embedded R code chunks within the document.
-> Slack uses a type of Markdown. you can also find Markdown on GitHub and Reddit!
+
+> Slack has a flavour of Markdown. You can also find Markdown on GitHub (GitHub flavour) and Reddit!
 
 This an example: You can embed an R code chunk like this:
 
@@ -43,8 +44,40 @@ You can also embed plots, for example:
 plot(pressure)
 ```
 
-In the example above, the `echo = FALSE` parameter was added to the ` ```{r}``` ` code chunk to prevent printing of the R code that generated the plot.
+In the example above, the `echo = FALSE` parameter was added to the ` ```{r}``` ` code chunk to prevent printing of the R code `plot(pressure)` that generated the plot.
 
+Let's put that aside and start exploring some data!
 
+## **Brain**span - Atlas of the Developing Human Brain
 
+[**Brain**span](http://www.brainspan.org/static/home) contains a developmental transcriptome database.
 
+```{r brainspan_screenshot, echo = FALSE}
+knitr::include_graphics("img/brainspan-dev-shot.png")
+```
+From here, we can easily download normalized transcript levels throughout development in different brain regions.
+
+Let's check *PANX1* throughout development. Click [here]() to download the files.
+
+## *PANX1* developmental profile
+
+```{r PANX1, message=FALSE, warning=FALSE}
+library(readr)
+library(tidyverse)
+PANX1_RNA <- t( # transposes the .csv
+  read_csv("PANX1/Expression.csv", # reads the .csv file
+           col_names = FALSE, # first row as values 
+           col_types = cols(X1 = col_skip()))  # removes the first row
+)
+
+PANX1_COL <- read_csv("PANX1/Columns.csv") # Imports Columns.csv
+
+PANX1 <- data.frame(
+  cbind(PANX1_COL, 
+        PANX1_log2_RPKM = PANX1_RNA)) # merges PANX1_COL & PANX1_RNA 
+
+rownames(PANX1) <- 1:nrow(PANX1) # gets row numbers
+
+head(PANX1) # prints first 6 observations in PANX1
+str(PANX1) # prints `PANX1` structure
+```
