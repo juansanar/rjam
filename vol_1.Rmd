@@ -195,3 +195,15 @@ PANX1_NP_post %>%
   ylim(0,6.5) +
   labs(caption = "Source: brainspan.org")
 ```
+
+## Some interesting facts
+- Neural development starts at the 5th week of pma (3 pcw) with the development ofthe neural tube (Nakatsu et al., 2000).
+- Neurogenesis starts at 6.5 pma (4.5 pcw), and continues throughout fetal devleopment up to 25-28 pma (23-26 pcw).
+- At 24-26 pma (22-24 pcw) spontaneous activity transients (SATs) within cortical plate circuitscan be detected using EEG, starting focally in the somatosensory, auditory, and visual cortices (Vanhatalo et al., 2005; Vanhatalo and Kaila, 2006).
+- With increasing age, SATs are longer, larger, and smaller in amplitude, becoming bilateral synchronous and organized in frontal and parieto-occipatal modules around term (Omidvarnia et al. 2014; Vanhatalo and Kaila, 2006).
+- During the first term post birth, SATs drop and continuos synchronous acitivty becomes predominant in EEGs (Vanhatalo and Kaila, 2006; Andre et al., 2010; Eisermann et al., 2013).
+
+## Outro
+That's all for today folks! You can use the above examples to explore levels of *PANX1* or your favourite gene in different brain regions, ages, etc. 
+
+> Stay tuned for Vol.2!
