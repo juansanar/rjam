@@ -178,7 +178,8 @@ PANX1_NP_pre %>%
   ggtitle("PANX1") + 
   theme(plot.title = element_text(hjust = 0.5, 
                                   face = "bold.italic")) + 
-  ylim(0,6.5)
+  ylim(0,6.5) + 
+  labs(caption = "Source: brainspan.org")
 ```
 
 #### *PANX1* postnatal
@@ -191,5 +192,6 @@ PANX1_NP_post %>%
   ylab("mRNA (log2 RPKM)") + 
   ggtitle("PANX1") + 
   theme(plot.title = element_text(hjust = 0.5, face = "bold.italic")) + 
-  ylim(0,6.5)
+  ylim(0,6.5) +
+  labs(caption = "Source: brainspan.org")
 ```
