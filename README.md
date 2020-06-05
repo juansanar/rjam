@@ -10,4 +10,4 @@ Hopefully this repo will keep growing as I (a recently turned wet-lab neurobiolo
 
 Date | R Jam Topic | Relevant Links
 ---| ---| ---|
-2020-05-26 | Vol.1: Exploring some genes in the developmental brain transcriptome map - brain-span | [**Brain**span](http://www.brainspan.org/rnaseq/search/index.html)
+2020-05-26 | [Vol.1: Exploring some genes in the developmental brain transcriptome map - brain-span](https://juansamdphd.github.io/rjam/) | [**Brain**span](http://www.brainspan.org/rnaseq/search/index.html)
