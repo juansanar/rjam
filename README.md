@@ -4,7 +4,7 @@ author: Juan C. Sanchez-Arias
 date: 2020-05-25
 ---
 # What are R Jam Sessions?
-R Jam Sessions are blocks to do all things R and Data Science. Meant to be a safe environment, this space's goal is to practice and share `R` skills for data science and visualization. I hope to inspire others to adapt `R` to their research and random explorations of the world, share their experience, and preach the power and impact of `R` and FOSS in science and medicine.
+R Jam Sessions are blocks of all things R and Data Science where I explore different datasets to practice and sharpen my `R` programming skills, statistical knowledge, and data visualization. I hope to inspire others to adapt `R` to their research and random explorations of the world, share their experience, and preach the power and impact of `R` and FOSS to their peers.
 
 Hopefully this repo will keep growing as I (a recently turned wet-lab neurobiologist) keep learning R and Data Science to elevate my ressearch projects and curiosity *voyages*.
 
