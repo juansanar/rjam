@@ -28,7 +28,7 @@ I'm all about biomedical research (specially that dealing with neuronal networks
 --- |--- |
 Me giivng one of the 4 NB Gulila Star Award talk at IGJC2019 | The other part of the award was a 3D printed connexin!
 
-I've started to merge my techy hobbies with my science and medicine curiosity. This led me to a path to learn `R` and this space (originally discussed during a lab meeting). Here, during `R Jam` Sessions I will practice and share my use of `R` for data science and visualization, from topics close to my research interests, others dear to my heart (hi homesickness? *how you doing?*), and some I've come across purely by chance.
+I've started to merge my techy hobbies with my science and medicine curiosity. This led me to a path to learn `R` and this space (originally discussed during a lab meeting). So, basically `R` Jam Sessions is my little nook in the internet of things to develop my skills in data science and visualization using datasetks from topics close to my research interests, others dear to my heart (hi homesickness? *how you doing?*), and some I've come across purely by chance.
 
 As a beginner, my code is not the prettiest nor the most efficient and I'm always recpetive to construcutive feedback. So don't hesitate in reaching out through issues or Twitter [\@juan_sanar](https://www.twitter.com/juan_sanar/) to drop tips, advice, or words of encourgament.
 
