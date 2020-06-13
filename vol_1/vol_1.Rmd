@@ -1,0 +1,209 @@
+---
+title: "R Jam Sessions Vol. 1"
+author: "Juan C. Sanchez-Arias"
+date: "26/05/2020"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: haddock
+  
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## What is this? A website? A report? RStudio? {.tabset}
+
+### R Markdown 
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When we **Knit** an R Markdown (.rmd) it will generate a document that includes both content as well as the output of any embedded R code chunks within the document.
+
+> Slack has a flavour of Markdown. You can also find Markdown on GitHub (GitHub flavour) and Reddit!
+
+This an example: You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+### Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+In the example above, the `echo = FALSE` parameter was added to the ` ```{r}``` ` code chunk to prevent printing of the R code `plot(pressure)` that generated the plot.
+
+Let's put that aside and start exploring some data!
+
+## **Brain**span - Atlas of the Developing Human Brain
+
+[**Brain**span](http://www.brainspan.org/static/home) contains a developmental transcriptome database.
+
+```{r brainspan_screenshot, echo = FALSE}
+knitr::include_graphics("img/brainspan-dev-shot.png")
+```
+From here, we can easily download normalized transcript levels throughout development in different brain regions.
+
+Let's check *PANX1* throughout development. Click [here](https://github.com/juansamdphd/rjam/tree/master/PANX1) to download the files.
+
+## *PANX1* developmental profile
+
+### Data exploration
+
+Let's import the files for *PANX1* and create a data.frame
+
+```{r PANX1, message=FALSE, warning=FALSE}
+library(readr)
+library(tidyverse)
+PANX1_RNA <- t( # transposes the .csv
+  read_csv("PANX1/Expression.csv", # reads the .csv file
+           col_names = FALSE, # first row as values 
+           col_types = cols(X1 = col_skip()))  # removes the first row
+)
+
+PANX1_COL <- read_csv("PANX1/Columns.csv") # Imports Columns.csv
+
+PANX1 <- data.frame(
+  cbind(PANX1_COL, 
+        PANX1_log2_RPKM = PANX1_RNA)) # merges PANX1_COL & PANX1_RNA 
+
+rownames(PANX1) <- 1:nrow(PANX1) # gets row numbers
+```
+Let's now check the first values and structure of `PANX1`
+```{r}
+head(PANX1) # prints first 6 observations in PANX1
+str(PANX1) # prints `PANX1` structure
+```
+
+Let's keep exploring the dataset and find out how many `unique` `donor_id` values are in `PANX1`. In other words let's check the biological replicates.
+
+```{r checking_bio_replicates}
+length(unique(PANX1$donor_id))
+```
+
+Let's group `PANX1` using `group_by` and `donor_id`. 
+
+*How many observations does each donor have?*
+
+```{r grouping_PANX1_by_donor_id}
+PANX1 %>% group_by(donor_id) %>% count(sort = TRUE) %>% print(n=42)
+```
+*How many observations from each strucutre and top level structure?*
+
+> Hint: One plate to rule them all!
+
+```{r grouping_by_structures}
+PANX1 %>% group_by(structure_name, top_level_structure_name, top_level_structure_abbreviation) %>% count(sort = TRUE) %>% print(n = 26)
+
+PANX1 %>% group_by(donor_id) %>% filter(top_level_structure_abbreviation == "NP") %>% count(sort = TRUE) %>% print(n=42)
+```
+
+### Subsetting *PANX1* dataframe
+
+So from the above analysis, structures derived from the neural plates are the most sampled by donor. Let's subset `PANX1` and create a data frame with microarray data obtained from neural plate-derived structures (`top_level_structure_abbreviation == "NP"`)
+
+```{r subset_PANX1_summary_stats, message=FALSE}
+library(Rmisc) # Load Rmisc package
+PANX1_NP <- PANX1 %>% # pipe `PANX1` into filter
+  filter(top_level_structure_abbreviation == "NP") %>% # filter "NP" structures
+  summarySE(measurevar = "PANX1_log2_RPKM", 
+            groupvars = c("donor_id", "donor_name", "donor_age"),
+            na.rm = TRUE) %>% # get summary stats with Rmisc
+  filter(N!=1) # filter out samples with N = 1 (producing NaNs)
+```
+
+Great! We have created `PANX1_NP` with *PANX1* transcript levels in neural plate strucutres and their summary statistics. We now have to deal with one more problem: `donor_age`. If you recall `str(PANX1)`, this variable type is `chr`. 
+
+Let's use some of the some of the characters to our advantage and create prenatal (pcw) and postnatal (mos, yrs) dataframes.
+
+```{r PANX1_prenatal, messages = FALSE}
+# Prenatal
+PANX1_NP_pre <- PANX1_NP %>% 
+  filter(str_detect(donor_age, "pcw"))
+
+PANX1_NP_pre <- PANX1_NP_pre %>% 
+  mutate(donor_age = 
+           as.numeric(gsub(" pcw", "", PANX1_NP_pre$donor_age))) %>%
+  arrange(donor_age)
+
+# Postnatal
+PANX1_NP_post_mos <- PANX1_NP %>% 
+  filter(str_detect(donor_age, "mos"))
+
+PANX1_NP_post_yrs <- PANX1_NP %>% 
+  filter(str_detect(donor_age, "yrs"))
+
+# Convert months to years
+PANX1_NP_post_mos <- PANX1_NP_post_mos %>% 
+  mutate(donor_age = 
+           (as.numeric(gsub(" mos", "", PANX1_NP_post_mos$donor_age)))/12) %>%
+  arrange(donor_age)
+
+# Remove yrs
+PANX1_NP_post_yrs <- PANX1_NP_post_yrs %>% 
+  mutate(donor_age = 
+           (as.numeric(gsub(" yrs", "", PANX1_NP_post_yrs$donor_age)))) %>%
+  arrange(donor_age)
+
+PANX1_NP_post <- rbind(PANX1_NP_post_mos, PANX1_NP_post_yrs)
+```
+
+### Plotting time {.tabset}
+
+We got in our hands now a nice "plottable" data frame. So, let's plot!
+
+#### *PANX1* prenatal
+
+```{r PANX1_NP_pre_plot, message=FALSE, warning=FALSE}
+PANX1_NP_pre %>% 
+  ggplot(aes(donor_age, PANX1_log2_RPKM)) + 
+  geom_point() + 
+  geom_smooth(fill = "blue", alpha = 0.2) + scale_x_continuous("Postconception weeks (pcw)", 
+                  limits = c(7,38), 
+                  breaks = seq(from = 8, to = 38, by = 2)) + 
+  ylab("mRNA (log2 RPKM)") + 
+  ggtitle("PANX1") + 
+  theme(plot.title = element_text(hjust = 0.5, 
+                                  face = "bold.italic")) + 
+  ylim(0,6.5) + 
+  labs(caption = "Source: brainspan.org")
+```
+
+#### *PANX1* postnatal
+```{r PANX1_NP_post_plot, message=FALSE, warning=FALSE}
+PANX1_NP_post %>% 
+  ggplot(aes(donor_age, PANX1_log2_RPKM)) + 
+  geom_point() + 
+  geom_smooth(fill = "blue", alpha = 0.2) + 
+  scale_x_continuous("Age (years)", limits = c(0,40), breaks = seq(from = 0, to = 40, by = 4)) + 
+  ylab("mRNA (log2 RPKM)") + 
+  ggtitle("PANX1") + 
+  theme(plot.title = element_text(hjust = 0.5, face = "bold.italic")) + 
+  ylim(0,6.5) +
+  labs(caption = "Source: brainspan.org")
+```
+
+## Some interesting facts
+- Neural development starts at the 5th week of pma (3 pcw) with the development ofthe neural tube (Nakatsu et al., 2000).
+- Neurogenesis starts at 6.5 pma (4.5 pcw), and continues throughout fetal devleopment up to 25-28 pma (23-26 pcw).
+- At 24-26 pma (22-24 pcw) spontaneous activity transients (SATs) within cortical plate circuitscan be detected using EEG, starting focally in the somatosensory, auditory, and visual cortices (Vanhatalo et al., 2005; Vanhatalo and Kaila, 2006).
+- With increasing age, SATs are longer, larger, and smaller in amplitude, becoming bilateral synchronous and organized in frontal and parieto-occipatal modules around term (Omidvarnia et al. 2014; Vanhatalo and Kaila, 2006).
+- During the first term post birth, SATs drop and continuos synchronous acitivty becomes predominant in EEGs (Vanhatalo and Kaila, 2006; Andre et al., 2010; Eisermann et al., 2013).
+
+## Outro
+That's all for today folks! You can use the above examples to explore levels of *PANX1* or your favourite gene in different brain regions, ages, etc. 
+
+> Stay tuned for Vol.2!
