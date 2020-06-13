@@ -1,0 +1,18 @@
+=========================
+BrainSpan: Atlas of the Developing Human Brain
+=========================
+
+This archive contains expression data for rows 1 through 1 of a 'search' search arranged by donors,structures
+
+The file Expression.csv contains log2 RPKM (reads per kilobase per million) values.
+
+Each row begins with the ID of a gene.
+
+The file Columns.csv contains metadata for each column in Expression.csv, arranged in the same order.
+
+The file Rows.csv contains metadata for the genes referenced in Expression.csv.
+
+The original search can be reproduced on our web site at http://www.brainspan.org/rnaseq/searches?search_type=user_selections
+
+
+
