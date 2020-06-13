@@ -1,0 +1,33 @@
+---
+title: "R Jam Sessions Vol.2"
+author: "Juan C. Sanchez-Arias"
+date: "2020-06-12"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: haddock
+  
+knit: (function(input_file, encoding) {
+  rmarkdown::render(input_file, encoding=encoding, 
+  output_file=file.path(dirname(input_file), 'index.html'))})
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## About Vol.2
+Inspired by [*Aguante*](https://www.youtube.com/watch?v=XJNZ2Wc5IqQ), the most recent realease from [Superlitio](https://en.wikipedia.org/wiki/Superlitio) (one of my all-time favourite Colombian rock bands), I started looking for openly available data about my hometown, Cali (Colombia).
+
+![*Cali es Cali lo demas es loma*, popular saying](https://i.makeagif.com/media/5-11-2016/cKuoi8.gif)
+To my pleasent surprise, I found this: Datos Abiertos, a portal with open data that I could use to practice my `R` skills while listening to this song and other [*Cali's classics*](http://datos.cali.gov.co/). 
+
+
+## R Jam Sessions Schedule
+Date | R Jam Topic | Relevant Links
+---| ---| ---|
+2020-05-26 | [Vol.1: Exploring some genes in the developmental brain transcriptome map - brain-span](https://juansamdphd.github.io/rjam/vol_1) | [**Brain**span](http://www.brainspan.org/rnaseq/search/index.html)
+2020-06-12 | Vol.2: Explore Cali, ve! | [Datos Abiertos](http://datos.cali.gov.co/) - [Cali](https://en.wikipedia.org/wiki/Cali)
+
