@@ -28,6 +28,8 @@ To my pleasant surprise, I found this: [Datos Abiertos](http://datos.cali.gov.co
 ### Accidentals deaths {.tabset}
 Cali's city council has kept records of accidental deaths by time of the day, day of the week, sex, age, and mechanisms. Let's take a dive in.
 
+#### By day of the week
+
 #### By time of day
 
 ```{r accid_death_times, warning=FALSE, message=FALSE, echo=FALSE}
@@ -76,9 +78,6 @@ p
 #                                     '</sup>')))
 ```
 
-
-#### By day of the week
-
 #### By age and sex
 
 #### By mechanim
@@ -87,5 +86,5 @@ p
 Date | R Jam Topic | Relevant Links
 ---| ---| ---|
 2020-05-26 | [Vol.1: Exploring some genes in the developmental brain transcriptome map - brain-span](https://juansamdphd.github.io/rjam/vol_1) | [**Brain**span](http://www.brainspan.org/rnaseq/search/index.html)
-2020-06-12 | Vol.2: Explore Cali, ve! | [Datos Abiertos](http://datos.cali.gov.co/) - [Cali](https://en.wikipedia.org/wiki/Cali)
+2020-06-12 | [Vol.2: Explore Cali, ve!](https://juansamdphd.github.io/rjam/vol_2) | [Datos Abiertos](http://datos.cali.gov.co/) - [Cali](https://en.wikipedia.org/wiki/Cali)
 
