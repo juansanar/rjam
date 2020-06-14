@@ -30,13 +30,55 @@ Cali's city council has kept records of accidental deaths by time of day, day of
 
 #### By day of the week
 
-#### By time of day
-
-```{r accid_death_times, warning=FALSE, message=FALSE, echo=FALSE}
+```{r accid_death_day, warning=FALSE,message=FALSE, echo=FALSE}
 
 library(readr)
 library(tidyverse)
 library(plotly)
+
+accid_death_day <- read_csv("http://datos.cali.gov.co/dataset/80780714-1eba-4aee-9096-49e36b41d424/resource/91b13049-7029-4db5-8525-961483fa49cb/download/muertes_accidentales_seg_n_d_a_de_ocurrencia_1994_-_2017.csv")
+
+accid_death_day <- rename(accid_death_day, "Day" = "Día")
+
+accid_death_day[,2:25] <- sapply(accid_death_day[,2:25], as.numeric)
+
+accid_death_day <- accid_death_day[-c(1:2),]
+
+accid_death_day$Day <- c("Wednesday", "Monday", "Tuesday", "Thursday", "Friday", "Saturday", "Sunday")
+
+accid_death_day$Day <- factor(accid_death_day$Day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+accid_death_day <- accid_death_day[,-c(8,9)]
+
+accid_death_day_long <- pivot_longer(accid_death_day, cols = c("1994":"2017"), names_to = "Year", values_to = "freq")
+
+d <- ggplot(data = accid_death_day_long, aes(x= Day, y = freq)) + 
+	geom_line(aes(group = Year), size = 0.5, colour = "gray") +
+	geom_line(data = accid_death_day_long %>% group_by(Day) %>% summarise(freq = mean(freq)), 
+						aes(x = Day, y = freq, group = 1, colour = "red"), size =1) +
+	# geom_point() +
+	# facet_wrap(~year) +
+	theme_bw() +
+	labs(title = "Accidental deaths by day of the week",
+			 subtitle = "Cali (Colombia), 1994-2017"
+			 , caption = "Source: http://datos.cali.gov.co/") +
+	ylab("Absolute frequency") +
+	xlab("Day of the week") +
+	scale_colour_manual(name = "", guide = "legend", values = c("red" = "red"), labels = c("Media")) +
+	theme(plot.subtitle = element_text(face = "italic"), 
+				legend.position = "none", axis.title.x = element_blank())
+# p
+ggplotly(d) %>%
+	layout(title = list(text = paste0('Accidental deaths by day of the week',
+																		'<br>',
+																		'<sup>',
+																		'Cali (Colombia), 1994-2017 | Source: http://datos.cali.gov.co/',
+																		'</sup>')))
+```
+
+#### By time of day
+
+```{r accid_death_times, warning=FALSE, message=FALSE, echo=FALSE}
 
 accid_death_times <- read_csv("http://datos.cali.gov.co/dataset/2b9d2d3d-5d62-4035-bd9f-bc2543039e2f/resource/a0f29617-a5a5-4642-9c0d-7886d42514f8/download/muertes_accidentales_seg_n_hora_de_ocurrencia__1994_-_2017.csv")
 
@@ -70,7 +112,9 @@ p <- ggplot(data = accid_death_times_long, aes(x= Hours, y = freq)) +
 	xlab("Time of day") +
 	scale_colour_manual(name = "", guide = "legend", values = c("red" = "red"), labels = c("Media")) +
 	theme(plot.subtitle = element_text(face = "italic"), 
-				axis.text.x = element_text(angle = 45, hjust = 0.9), legend.position = "none")
+				# axis.text.x = element_text(angle = 45, hjust = 0.9), 
+				legend.position = "none",
+				axis.title.x = element_blank())
 # p
 ggplotly(p) %>%
 	layout(title = list(text = paste0('Accidental deaths by time of day',
