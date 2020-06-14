@@ -172,7 +172,7 @@ ggplotly(s) %>%
 
 #### By age
 
-#### By mechanim
+#### By mechanims
 
 ## R Jam Sessions Schedule
 Date | R Jam Topic | Relevant Links
