@@ -62,11 +62,13 @@ d <- ggplot(data = accid_death_day_long, aes(x= Day, y = freq)) +
 	labs(title = "Accidental deaths by day of the week",
 			 subtitle = "Cali (Colombia), 1994-2017"
 			 , caption = "Source: http://datos.cali.gov.co/") +
-	ylab("Absolute frequency") +
+	ylab("Frequency") +
 	xlab("Day of the week") +
 	scale_colour_viridis_d() +
 	theme(plot.subtitle = element_text(face = "italic"), 
-				legend.position = "bottom", axis.title.x = element_blank())
+				legend.position = "bottom", 
+				axis.title.x = element_blank(),
+				text = element_text(size = 14))
 # p
 ggplotly(d) %>%
 	layout(title = list(text = paste0('Accidental deaths by day of the week',
@@ -93,7 +95,7 @@ accid_death_times <- accid_death_times[,-9]
 accid_death_times$Hours <- factor(c(accid_death_times$Hours))
 
 accid_death_times_long <- pivot_longer(accid_death_times, cols = c("1994":"2017"), names_to = "Year", values_to = "freq")
-
+ 
 # accid_death_times_long$year <- as.numeric(accid_death_times_long$year)
 
 # accid_death_times_long <- pivot_wider(accid_death_times_long, names_from = Hora, values_from = freq)
@@ -107,13 +109,14 @@ p <- accid_death_times_long %>% ggplot(aes(x= Hours, y = freq)) +
 	labs(title = "Accidental deaths by time of day",
 			 subtitle = "Cali (Colombia), 1994-2017"
 			 , caption = "Source: http://datos.cali.gov.co/") +
-	ylab("Absolute frequency") +
+	ylab("Frequency") +
 	xlab("Time of day") +
 	scale_colour_viridis_d() +
 	theme(plot.subtitle = element_text(face = "italic"), 
-				# axis.text.x = element_text(angle = 45, hjust = 0.9), 
+				axis.text.x = element_text(angle = 45, hjust = 0.9), 
 				legend.position = "bottom",
-				axis.title.x = element_blank())
+				axis.title.x = element_blank(),
+				text = element_text(size = 14))
 # p
 ggplotly(p) %>%
 	layout(title = list(text = paste0('Accidental deaths by time of day',
@@ -123,7 +126,51 @@ ggplotly(p) %>%
 																		'</sup>')))
 ```
 
-#### By age and sex
+#### By sex
+```{r accid_death_sex, warning=FALSE, message=FALSE, echo=FALSE}
+
+accid_death_sex <- read_csv("http://datos.cali.gov.co/dataset/1de1a93c-a4fe-4f87-a266-45e58dedda68/resource/e8aa09b0-bb35-403e-8deb-3eb5a3930f9f/download/muertes_accidentales_seg_n_sexo_en_el_municipio_de_santiago_de_cali_2004_-_2017-1.csv")
+
+accid_death_sex <- accid_death_sex[-3,]
+
+accid_death_sex_long <- accid_death_sex %>% 
+	pivot_longer(cols = "2004":"2017", 
+							 names_to = "Year",
+							 values_to = "freq")
+
+accid_death_sex_long <- accid_death_sex_long %>% rename(Sex = "AÑO")
+
+accid_death_sex_long <- type_convert(accid_death_sex_long)
+
+s <- accid_death_sex_long %>% ggplot(aes(x= as.factor(Sex), y = freq)) +
+	geom_point(aes(colour = as.factor(Year))) +
+	geom_line(aes(group = as.factor(Year), colour = as.factor(Year)), alpha = 0.1) +
+	geom_boxplot(colour = "gray", fill = "gray", alpha = 0.4, notch = FALSE, width = 0.2) +
+		# facet_wrap(~year) +
+	theme_bw() +
+	labs(title = "Accidental deaths by sex",
+			 subtitle = "Cali (Colombia), 2004-2017"
+			 , caption = "Source: http://datos.cali.gov.co/") +
+	ylab("Frequency") +
+	xlab("Sex") +
+	labs(colour = "Year") +
+	scale_colour_viridis_d() +
+	scale_x_discrete(labels = c("Female", "Male")) +
+	theme(plot.subtitle = element_text(face = "italic"), 
+				# axis.text.x = element_text(angle = 45, hjust = 0.9), 
+				legend.position = "bottom",
+				axis.title.x = element_blank(),
+				text = element_text(size = 14))
+
+ggplotly(s) %>%
+	layout(title = list(text = paste0('Accidental deaths by sex',
+																		'<br>',
+																		'<sup>',
+																		'Cali (Colombia), 2004-2017 | Source: http://datos.cali.gov.co/',
+																		'</sup>')))
+```
+
+#### By age
 
 #### By mechanim
 
