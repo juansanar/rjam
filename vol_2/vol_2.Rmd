@@ -53,9 +53,9 @@ accid_death_day <- accid_death_day[,-c(8,9)]
 accid_death_day_long <- pivot_longer(accid_death_day, cols = c("1994":"2017"), names_to = "Year", values_to = "freq")
 
 d <- ggplot(data = accid_death_day_long, aes(x= Day, y = freq)) + 
-	geom_line(aes(group = Year), size = 0.5, colour = "gray") +
-	geom_line(data = accid_death_day_long %>% group_by(Day) %>% summarise(freq = mean(freq)), 
-						aes(x = Day, y = freq, group = 1, colour = "red"), size =1) +
+	geom_point(aes(colour = Year)) +
+	geom_line(aes(group = Year, colour = Year), alpha = 0.1) +
+	geom_boxplot(colour = "gray", fill = "gray", alpha = 0.4, notch = TRUE) +
 	# geom_point() +
 	# facet_wrap(~year) +
 	theme_bw() +
@@ -64,9 +64,9 @@ d <- ggplot(data = accid_death_day_long, aes(x= Day, y = freq)) +
 			 , caption = "Source: http://datos.cali.gov.co/") +
 	ylab("Absolute frequency") +
 	xlab("Day of the week") +
-	scale_colour_manual(name = "", guide = "legend", values = c("red" = "red"), labels = c("Media")) +
+	scale_colour_viridis_d() +
 	theme(plot.subtitle = element_text(face = "italic"), 
-				legend.position = "none", axis.title.x = element_blank())
+				legend.position = "bottom", axis.title.x = element_blank())
 # p
 ggplotly(d) %>%
 	layout(title = list(text = paste0('Accidental deaths by day of the week',
@@ -90,7 +90,7 @@ accid_death_times <- accid_death_times[-c(9:10),]
 
 accid_death_times <- accid_death_times[,-9]
 
-accid_death_times$Hora <- factor(c(accid_death_times$Hours))
+accid_death_times$Hours <- factor(c(accid_death_times$Hours))
 
 accid_death_times_long <- pivot_longer(accid_death_times, cols = c("1994":"2017"), names_to = "Year", values_to = "freq")
 
@@ -98,22 +98,21 @@ accid_death_times_long <- pivot_longer(accid_death_times, cols = c("1994":"2017"
 
 # accid_death_times_long <- pivot_wider(accid_death_times_long, names_from = Hora, values_from = freq)
 
-p <- ggplot(data = accid_death_times_long, aes(x= Hours, y = freq)) + 
-	geom_line(aes(group = Year), size = 0.5, colour = "gray") +
-	geom_line(data = accid_death_times_long %>% group_by(Hours) %>% summarise(freq = mean(freq)), 
-						aes(x = Hours, y = freq, group = 1, colour = "red"), size =1) +
-	# geom_point() +
-	# facet_wrap(~year) +
+p <- accid_death_times_long %>% ggplot(aes(x= Hours, y = freq)) +
+	geom_point(aes(colour = Year)) +
+	geom_line(aes(group = Year, colour = Year), alpha = 0.1) +
+	geom_boxplot(colour = "gray", fill = "gray", alpha = 0.4, notch = TRUE) +
+		# facet_wrap(~year) +
 	theme_bw() +
 	labs(title = "Accidental deaths by time of day",
 			 subtitle = "Cali (Colombia), 1994-2017"
 			 , caption = "Source: http://datos.cali.gov.co/") +
 	ylab("Absolute frequency") +
 	xlab("Time of day") +
-	scale_colour_manual(name = "", guide = "legend", values = c("red" = "red"), labels = c("Media")) +
+	scale_colour_viridis_d() +
 	theme(plot.subtitle = element_text(face = "italic"), 
 				# axis.text.x = element_text(angle = 45, hjust = 0.9), 
-				legend.position = "none",
+				legend.position = "bottom",
 				axis.title.x = element_blank())
 # p
 ggplotly(p) %>%
