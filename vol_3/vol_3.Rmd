@@ -1,0 +1,126 @@
+---
+title: "R Jam Sessions Vol.3"
+author: "Juan C. Sanchez-Arias"
+date: "2020-07-21"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: haddock
+  
+knit: (function(input_file, encoding) {
+  rmarkdown::render(input_file, encoding=encoding, 
+  output_file=file.path(dirname(input_file), 'index.html'))})
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## About Vol.3
+I got a puppy! Her name is Luna (*latin* for Moon) and she is a 12 week Shel-Aussie (Shetland Shepherd x Australian Shepherd mix). so far Luna seems to be a very sweet, playful, and smart dog, but I guess this is what everyone says about their dogs. I have had some other dogs in the past (a rottie and two miniature poodles, one white and one black) and I also thought they were quite smart. so I wanted to learn more about how other breedsd perform in "intelligence tasks".
+
+![Luna: "Hello world!"](https://lh3.googleusercontent.com/-kGD_gnyInNA/XwznXEmQBhI/AAAAAAAAbaA/xuJiYDbK5lIarnvzeAJEMUn1WwFmLz3HACK8BGAsYHg/s0/2020-07-13.jpg)
+
+Luckily, I found some dataasets that will help me endorse my curiosity. The datasets are:
+
+- Intelligence of Dogs: 
+	- Source: https://data.world/len/intelligence-of-dogs
+	- This dataset is based on research by Stanley Coren, a professor of canine psychology at the University of British Columbia. When Coren first published his book in 1994, there was a high degree of dispute of his analysis, though over time his work has been largely accepted.
+		- Data Dictionary
+		- obey: probability that the breed obeys the first command (figure is lower bound)
+		- reps_lower: lower limit of repetitions to understand new commands
+		- reps_upper: upper limit of repetitions to understand new commands
+	- More info: https://en.m.wikipedia.org/wiki/The_Intelligence_of_Dogs#cite_ref-ReferenceA_18-0
+- Dog Breedn size (AKC recrods)
+	- Source: https://data.world/len/dog-canine-breed-size-akc
+
+### Size {.tabset}
+Checking size charactersitics in this AKC dataset
+
+#### By weight
+
+```{r dog_weight, warning = FALSE, message=FALSE, echo=FALSE}
+library(readr)
+library(tidyverse)
+
+size <- read.csv("https://query.data.world/s/zpxuhskf5ug2fbelhxyyrxilbmlrsa", header=TRUE, stringsAsFactors=FALSE)
+
+size[,2:5] <- lapply(size[,2:5], as.numeric)
+
+size <- size[complete.cases(size),]
+
+size <- size %>% mutate(avg_height = (height_low_inches+height_high_inches)/2, 
+												avg_weight = (weight_low_lbs+weight_high_lbs)/2, 
+												delta_height = height_high_inches - height_low_inches, 
+												delta_weight = weight_high_lbs - weight_low_lbs)
+
+size %>% filter(avg_weight > 2*median(avg_weight)) %>% ggplot(aes(x = reorder(Breed, -avg_weight), 
+										y = avg_weight, 
+										size = delta_weight, colour = Breed)) + 
+	geom_point() +
+	scale_colour_viridis_d() +
+	coord_flip() + 
+	theme(legend.position = "none") +
+	ggtitle("Dog breeds with average weight greater than twice the median \n weight of AKC breeds")
+```
+
+```{r}
+variable_units <- data.frame(var_name = c("Weight", "Height"), units = c("lb", "in"))
+variable_units
+```
+
+#### By height
+
+```{r dog_height, warning=FALSE, message=FALSE, echo=FALSE}
+
+accid_death_times <- read_csv("http://datos.cali.gov.co/dataset/2b9d2d3d-5d62-4035-bd9f-bc2543039e2f/resource/a0f29617-a5a5-4642-9c0d-7886d42514f8/download/muertes_accidentales_seg_n_hora_de_ocurrencia__1994_-_2017.csv")
+
+accid_death_times[,2:25] <- sapply(accid_death_times[,2:25], as.numeric)
+
+accid_death_times <- accid_death_times[-c(9:10),]
+
+accid_death_times <- accid_death_times[,-9]
+
+accid_death_times$Hora <- factor(c(accid_death_times$Hora))
+
+accid_death_times_long <- pivot_longer(accid_death_times, cols = c("1994":"2017"), names_to = "Año", values_to = "freq")
+
+# accid_death_times_long$year <- as.numeric(accid_death_times_long$year)
+
+# accid_death_times_long <- pivot_wider(accid_death_times_long, names_from = Hora, values_from = freq)
+
+p <- ggplot(data = accid_death_times_long, aes(x= Hora, y = freq)) + 
+	geom_line(aes(group = Año), size = 0.5, colour = "gray") +
+	geom_line(data = accid_death_times_long %>% group_by(Hora) %>% summarise(freq = mean(freq)), 
+						aes(x = Hora, y = freq, group = 1, colour = "red"), size =1) +
+	# geom_point() +
+	# facet_wrap(~year) +
+	theme_bw() +
+	labs(title = "Accidental deaths by time of the day",
+			 subtitle = "Cali (Colombia), 1994-2017"
+		, caption = "Source: http://datos.cali.gov.co/") +
+	ylab("Absolute frequency") +
+  xlab("Time of the day") +
+	scale_colour_manual(name = "", guide = "legend", values = c("red" = "red"), labels = c("Media")) +
+	theme(plot.subtitle = element_text(face = "italic"), 
+			axis.text.x = element_text(angle = 45, hjust = 0.9), legend.position = "none")
+p
+# ggplotly(p) %>%
+#   layout(title = list(text = paste0('Muertes accidentales según hora de ocurrencia',
+#                                     '<br>',
+#                                     '<sup>',
+#                                     'Cali (Colombia), 1994-2017 | Fuente: http://datos.cali.gov.co/',
+#                                     '</sup>')))
+```
+
+### Intelligence
+
+## R Jam Sessions Schedule
+Date | R Jam Topic | Relevant Links
+---| ---| ---|
+2020-05-26 | [Vol.1: Exploring some genes in the developmental brain transcriptome map - brain-span](https://juansamdphd.github.io/rjam/vol_1) | [**Brain**span](http://www.brainspan.org/rnaseq/search/index.html)
+2020-06-12 | [Vol.2: Explore Cali, ve!](https://juansamdphd.github.io/rjam/vol_2) | [Datos Abiertos](http://datos.cali.gov.co/) - [Cali](https://en.wikipedia.org/wiki/Cali)
+2020-07-21 | [Vol.3: I got a puppy!](https://juansamdphd.github.io/rjam/vol_3) | [data.world](https://data.world/len/intelligence-of-dogs)
+
