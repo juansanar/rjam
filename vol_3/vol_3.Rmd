@@ -63,7 +63,7 @@ size %>% filter(avg_weight > 2*median(avg_weight)) %>% ggplot(aes(x = reorder(Br
 	scale_colour_viridis_d() +
 	coord_flip() + 
 	theme(legend.position = "none") +
-	ggtitle("Dog breeds with average weight greater than twice the median \n weight of AKC breeds")
+	ggtitle("Dog breeds with average weight greater than twice the median \n ``weight of AKC breeds")
 ```
 
 ```{r}
